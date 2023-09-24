@@ -10,11 +10,16 @@
 
         <title>To Do List app</title>
 
-        <!-- Bootstrap Core CSS -->
-        <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-
         <!-- Custom CSS -->
-        <link href="{{ asset('css/shop-homepage.css') }}" rel="stylesheet">
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        {% block stylesheets %}
+            <link href="{{ asset('assets/css/shop-homepage.css') }}" rel="stylesheet">
+            <!-- Bootstrap Core CSS -->
+            <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
+        {% endblock %}
+
+        {% block javascripts %}
+        {% endblock %}
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -28,9 +33,8 @@
         <nav class="navbar navbar-light navbar-fixed-top" style="background-color: #e3f2fd;" role="navigation">
             <div class="container">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#">To Do List app</a>
-
-                    <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms" />
+                    <a class="navbar-brand" href="/">To Do List app</a>
+                    <img src="{{ asset('assets/img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms" />
                 </div>
             </div>
         </nav>
@@ -39,7 +43,6 @@
         <div class="container">
             <div class="row">
                 <a href="{{ path('user_create') }}" class="btn btn-primary">Créer un utilisateur</a>
-
                 {% if app.user %}
                 <a href="{{ path('logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
                 {% endif %}
@@ -50,7 +53,7 @@
             </div>
 
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 p-0 m-3" style='padding:0px !important'>
                     {% for flash_message in app.session.flashBag.get('success') %}
                         <div class="alert alert-success" role="alert">
                             <strong>Superbe !</strong> {{ flash_message }}
@@ -64,7 +67,7 @@
                     {% endfor %}
 
                     {% block header_title %}{% endblock %}
-                    {% block header_img %}<img class="slide-image" src="{{ asset('img/todolist_homepage.jpg') }}" alt="todo list">{% endblock %}
+                    {% block header_img %}<img class="slide-image p-0" src="{{ asset('assets/img/todolist_homepage.jpg') }}" alt="todo list">{% endblock %}
                 </div>
             </div>
 
@@ -91,7 +94,8 @@
 
         </div>
 
-        <script src="{{ asset('js/jquery.js') }}"></script>
-        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('assets/js/jquery.js') }}"></script>
+        <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
     </body>
 </html>
+
