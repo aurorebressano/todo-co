@@ -3,8 +3,9 @@
 {% block header_img %}<img class="slide-image" src="{{ asset('assets/img/todolist_content.jpg') }}" alt="todo list">{% endblock %}
 
 {% block body %}
-    <a href="{{ path('task_create') }}" class="btn btn-info pull-right">Créer une tâche</a>
+    <a href="{{ path('task_create') }}" class="btn btn-info pull-right" style="margin-top: 9px;">Créer une tâche</a>
     <div class="row">
+        {% if tasks|length > 0 %}
         {% for task in tasks %}
         <div class="col-sm-4 col-lg-4 col-md-4">
             <div class="thumbnail">
@@ -27,10 +28,11 @@
                 </div>
             </div>
         </div>
+        {% endfor %}
         {% else %}
             <div class="alert alert-warning" role="alert">
-                Il n'y a pas encore de tâche enregistrée. <a href="{{ path('task_create') }}" class="btn btn-warning pull-right">Créer une tâche</a>
+                Il n'y a pas encore de tâche enregistrée.
             </div>
-        {% endfor %}
+        {% endif %}
     </div>
 {% endblock %}
