@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Entity\Task;
+// use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -19,9 +20,7 @@ use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: ["email"], message: "Cet email est déjà utilisé")]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 #[UniqueEntity(fields: ["username"], message: "Ce login est déjà utilisé")]
-#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -30,7 +29,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Assert\NotNull(message: "Veuillez renseigner un email")]
     #[Assert\Email(message: "Veuillez saisir un email valide")]
     private ?string $email = null;
 
@@ -41,10 +39,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
-    // #[Assert\NotNull('Le mot de passe doit être renseigné', groups: ['edit'])]
-    // #[SecurityAssert\UserPassword(
-    //     message: 'Wrong value for your current password',
-    // )]
+    #[Assert\NotNull(message: 'Le mot de passe doit être renseigné')]
+    #[SecurityAssert\UserPassword(
+        message: 'Wrong value for your current password',
+    )]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
@@ -123,7 +121,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
@@ -174,13 +172,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->getUsername();
     }
 
-    public function __serialize(): array
-    {
-        return [
-            'id' => $this->id,
-            'email' => $this->email,
-            'username' => $this->username,
-            'password' => $this->password,
-        ];
-    }
+    // public function __serialize(): array
+    // {
+    //     return [
+    //         'id' => $this->id,
+    //         'email' => $this->email,
+    //         'username' => $this->username,
+    //         'password' => $this->password,
+    //     ];
+    // }
 }
