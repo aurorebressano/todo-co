@@ -1,22 +1,23 @@
-<?php 
+<?php
+
 namespace App\Security;
 
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use App\Entity\Trick;
 use App\Entity\User;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class UserVoter extends Voter
 {
     // these strings are just invented: you can use anything+
 
-    const VIEW = 'view';
-    const EDIT = 'edit';
-    const DELETE = 'delete';
-    const CREATE = 'create';
+    public const VIEW = 'view';
+    public const EDIT = 'edit';
+    public const DELETE = 'delete';
+    public const CREATE = 'create';
 
-    public function __construct(private Security $security) 
+    public function __construct(private Security $security)
     {
         $this->security = $security;
     }
@@ -31,7 +32,13 @@ class UserVoter extends Voter
         if (!$subject instanceof User) {
             return false;
         }
+
         return true;
+    }
+
+    public function publicSupports($attribute, $subject)
+    {
+        return $this->supports($attribute, $subject);
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -52,12 +59,17 @@ class UserVoter extends Voter
         /** @var User $task */
         $user = $subject;
 
-        return match($attribute) {
+        return match ($attribute) {
             self::VIEW => $this->canView($user, $currentUser),
             self::EDIT => $this->canEdit($user, $currentUser),
             self::DELETE => $this->canDelete($user, $currentUser),
             default => throw new \LogicException('This code should not be reached!')
         };
+    }
+
+    public function publicVoteOnAttribute($attribute, $subject, $token)
+    {
+        return $this->voteOnAttribute($attribute, $subject, $token);
     }
 
     private function canView(User $user, User $currentUser): bool

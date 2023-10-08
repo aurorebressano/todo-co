@@ -4,25 +4,26 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UserRepository;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Security\UserVoter;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class UserController extends AbstractController
 {
-    #[Route("/users", name: "user_list", methods: ['GET'])]
+    #[Route('/users', name: 'user_list', methods: ['GET'])]
     public function list(UserRepository $userRepository)
     {
         $this->denyAccessUnlessGranted(UserVoter::VIEW, $user);
+
         return $this->render('user/list.html.twig', ['users' => $userRepository->findAll()]);
     }
 
-    #[Route("/users/create", name: "user_create", methods: ['GET', 'POST'])]
+    #[Route('/users/create', name: 'user_create', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function create(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $userPasswordHasherInterface)
     {
@@ -46,7 +47,7 @@ class UserController extends AbstractController
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
 
-    #[Route("/users/{id \d+}/edit", name: "user_edit", methods: ['GET', 'POST'])]
+    #[Route("/users/{id \d+}/edit", name: 'user_edit', methods: ['GET', 'POST'])]
     public function edit(User $user, Request $request)
     {
         $this->denyAccessUnlessGranted(UserVoter::EDIT, $user);
@@ -68,15 +69,14 @@ class UserController extends AbstractController
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
     }
 
-    #[Route("/users/delete/{id}", name: "user_delete", methods: ['POST'])]
+    #[Route('/users/delete/{id}', name: 'user_delete', methods: ['POST'])]
     public function delete(User $user, Request $request, EntityManagerInterface $em, UserRepository $userRepository)
     {
         $this->denyAccessUnlessGranted(UserVoter::DELETE, $user);
         $userAnonyme = $userRepository->findOneByUsername('anonyme');
         $tasksToReassign = $user->getTasks();
 
-        foreach($tasksToReassign as $task)
-        {
+        foreach ($tasksToReassign as $task) {
             $task->setUser($userAnonyme);
         }
 
