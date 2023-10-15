@@ -18,6 +18,7 @@ class UserController extends AbstractController
     #[Route('/users', name: 'user_list', methods: ['GET'])]
     public function list(UserRepository $userRepository)
     {
+        $user = $this->getUser();
         $this->denyAccessUnlessGranted(UserVoter::VIEW, $user);
 
         return $this->render('user/list.html.twig', ['users' => $userRepository->findAll()]);
