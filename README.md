@@ -9,11 +9,11 @@ Symfony CLI<br>
 
 <h3>Installation et configuration:</h3>
 
-Télécharger ou cloner le repository (en ligne de commande: 'git clone https://github.com/aurorebressano/todo-co.git')<br>
+Télécharger ou cloner le repository (en ligne de commande: 'git clone https://github.com/aurorebressano/todo-co.git')<br/>
 Modifier les infos nécessaires dans fichier .env (notamment DATABASE_URL avec les infos de votre base de données)
 
 En ligne de commande, jouer:<br>
-->'symfony composer install --optimize-autoloader' (Installer les dépendances nécessaires à l'exécution de l'application)<br>
+->'symfony composer install --optimize-autoloader' (Installer les dépendances nécessaires à l'exécution de l'application)<br/>
 ->'symfony console doctrine:database:create'<br>
 ->'symfony console doctrine:migrations:migrate --no-interaction'<br>
 ->'symfony console doctrine:fixtures:load --no-interaction'<br>
