@@ -50,6 +50,15 @@ class TaskRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function save(Task $task, bool $flush = false)
+    {
+        $this->getEntityManager()->persist($task);
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+    
     //    /**
     //     * @return Task[] Returns an array of Task objects
     //     */

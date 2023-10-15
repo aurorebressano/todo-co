@@ -4,65 +4,81 @@ namespace App\Tests\Repository;
 
 use App\Entity\Task;
 use App\Entity\User;
+use App\Repository\TaskRepository;
+use App\Repository\UserRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class TaskRepositoryTest extends KernelTestCase
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
-
-    protected function setUp(): void
+    public function setUp(): void
     {
-        $kernel = self::bootKernel();
-
-        $this->entityManager = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
+        self::bootKernel();
+        $this->userPasswordHasherInterface = static::getContainer()->get('security.user_password_hasher');
+        $this->userRepository = static::getContainer()->get('doctrine.orm.entity_manager')->getRepository(User::class);
     }
 
-    public function testFindByIsDoneTrue()
+    public function createUser()
     {
-        $user = $this->entityManager
-            ->getRepository(User::class)
-            ->findOneBy([]); // Add specific criteria if needed, e.g. ['username' => 'example']
+        $user = new User();
+        $user->setUsername('TestAdminUser');
+        $user->setPassword($this->userPasswordHasherInterface->hashPassword($user, 'test'));
+        $user->setEmail('admin@email.fr');
+        $user->setRoles(['ROLE_ADMIN']);
 
-        $tasks = $this->entityManager
-            ->getRepository(Task::class)
-            ->findByIsDoneTrue($user);
+        $this->userRepository->save($user, true);
 
-        $this->assertNotEmpty($tasks);
-
-        foreach ($tasks as $task) {
-            $this->assertTrue($task->getIsDone());
-            $this->assertEquals($user->getId(), $task->getUser()->getId());
-        }
+        return $user;
     }
 
-    public function testFindByIsDoneFalse()
+    public function testCreateTask()
     {
-        $user = $this->entityManager
-            ->getRepository(User::class)
-            ->findOneBy([]); // Add specific criteria if needed
+        $this->createUser();
+        $taskRepository = new TaskRepository(static::getContainer()->get(ManagerRegistry::class));
+        $userRepository = new UserRepository(static::getContainer()->get(ManagerRegistry::class));
 
-        $tasks = $this->entityManager
-            ->getRepository(Task::class)
-            ->findByIsDoneFalse($user);
+        $task = new Task();
+        $task
+            ->setTitle('TestTitle')
+            ->setContent('Content test')
+            ->setUser($userRepository->findOneByUsername('TestAdminUser'))
+        ;
 
-        $this->assertNotEmpty($tasks);
+        $taskRepository->save($task, true);
+        $this->assertNotNull($taskRepository->findOneByTitle('TestTitle'));
 
-        foreach ($tasks as $task) {
-            $this->assertFalse($task->getIsDone());
-            $this->assertEquals($user->getId(), $task->getUser()->getId());
-        }
+        return $task;
     }
 
-    protected function tearDown(): void
+    public function testUpdateTask()
     {
-        parent::tearDown();
+        $this->testCreateTask();
+        $taskRepository = new TaskRepository(static::getContainer()->get(ManagerRegistry::class));
+        $task = $taskRepository->findOneByTitle('TestTitle');
+        $task->setTitle('TestTitleUpdated');
+        $task->setIsDone(false);
+        $taskRepository->save($task, true);
+        $this->assertNotNull($taskRepository->findOneByTitle('TestTitleUpdated'));
+        $this->assertEquals(false, $taskRepository->findOneByTitle('TestTitleUpdated')->isDone());
+        return $task;
+    }
 
-        $this->entityManager->close();
-        $this->entityManager = null;
+    public function testFindByIsDoneTrue(): void
+    {
+        $createTask = $this->testCreateTask();
+        $user = $createTask->getUser();
+        $taskRepository = new TaskRepository(static::getContainer()->get(ManagerRegistry::class));
+        $task = $taskRepository->findByIsDoneTrue($user);
+
+        $this->assertNotNull($task);
+    }
+
+    public function testFindByIsDoneFalse(): void
+    {
+        $createTask = $this->testUpdateTask();
+        $user = $createTask->getUser();
+        $taskRepository = new TaskRepository(static::getContainer()->get(ManagerRegistry::class));
+        $task = $taskRepository->findByIsDoneTrue($user);
+        $this->assertNotNull($task);
     }
 }

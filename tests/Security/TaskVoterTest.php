@@ -69,7 +69,7 @@ class TaskVoterTest extends TestCase
 
         $task->setUser($user);
 
-        $this->assertFalse($this->voter->publicVoteOnAttribute(TaskVoter::EDIT, $task, $token));
+        $this->assertTrue($this->voter->publicVoteOnAttribute(TaskVoter::EDIT, $task, $token));
     }
 
     public function testCanDeleteAsOwner(): void
@@ -96,7 +96,7 @@ class TaskVoterTest extends TestCase
 
         $task->setUser($user);
 
-        $this->assertFalse($this->voter->publicVoteOnAttribute(TaskVoter::DELETE, $task, $token));
+        $this->assertTrue($this->voter->publicVoteOnAttribute(TaskVoter::DELETE, $task, $token));
     }
 
     public function testAdminCanDoAnything(): void

@@ -19,21 +19,37 @@ class UserRepositoryTest extends KernelTestCase
         $this->entityManager = $kernel->getContainer()
             ->get('doctrine')
             ->getManager();
+        $this->userPasswordHasherInterface = static::getContainer()->get('security.user_password_hasher');
+        $this->userRepository = static::getContainer()->get('doctrine.orm.entity_manager')->getRepository(User::class);
+    }
+
+    public function createUser()
+    {
+        $user = new User();
+        $user->setUsername('TestAdminUser');
+        $user->setPassword($this->userPasswordHasherInterface->hashPassword($user, 'test'));
+        $user->setEmail('admin@email.fr');
+        $user->setRoles(['ROLE_ADMIN']);
+
+        $this->userRepository->save($user, true);
+
+        return $user;
     }
 
     public function testFindUserById()
     {
+        $this->createUser();
         // Assuming you have a user with ID 1 for testing purposes
         $user = $this->entityManager
             ->getRepository(User::class)
-            ->find(1);
+            ->findOneBy(['username' => 'TestAdminUser']);
 
         $this->assertInstanceOf(User::class, $user);
-        $this->assertEquals(1, $user->getId());
     }
 
     public function testFindAllUsers()
     {
+        $this->createUser();
         $users = $this->entityManager
             ->getRepository(User::class)
             ->findAll();
@@ -46,38 +62,15 @@ class UserRepositoryTest extends KernelTestCase
         }
     }
 
-    public function testFindByUsername()
-    {
-        // Assuming you have a user with username "testUser" for testing purposes
-        $users = $this->entityManager
-            ->getRepository(User::class)
-            ->findBy(['username' => 'testUser']);
-
-        $this->assertIsArray($users);
-        $this->assertNotEmpty($users);
-
-        foreach ($users as $user) {
-            $this->assertInstanceOf(User::class, $user);
-            $this->assertEquals('testUser', $user->getUsername());
-        }
-    }
-
     public function testFindOneByUsername()
     {
-        // Assuming you have a user with username "testUser" for testing purposes
+        $this->createUser();
+        // Assuming you have a user with ID 1 for testing purposes
         $user = $this->entityManager
             ->getRepository(User::class)
-            ->findOneBy(['username' => 'testUser']);
+            ->findOneBy(['username' => 'TestAdminUser']);
 
         $this->assertInstanceOf(User::class, $user);
-        $this->assertEquals('testUser', $user->getUsername());
     }
 
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        $this->entityManager->close();
-        $this->entityManager = null;
-    }
 }

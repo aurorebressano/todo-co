@@ -28,13 +28,18 @@ class Task
     private ?string $content = null;
 
     #[ORM\Column]
-    private ?bool $isDone = null;
+    private ?bool $isDone;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotNull]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $user = null;
 
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->isDone = false;
+    }
+    
     public function getId(): ?int
     {
         return $this->id;

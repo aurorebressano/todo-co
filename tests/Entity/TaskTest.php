@@ -60,19 +60,6 @@ class TaskTest extends KernelTestCase
         $task->setCreatedAt(new \DateTime());
         $task->setIsDone(false);
         $errors = $this->validateTask($task);
-        $this->assertGreaterThan(0, count($errors), 'Expected validation errors for empty content.');
+        $this->assertCount(1, $errors, 'Expected validation errors for empty content.');
     }
-
-    public function testNoUserAssigned(): void
-    {
-        $task = new Task();
-        $task->setTitle('Test title');
-        $task->setContent('Test content');
-        $task->setCreatedAt(new \DateTime());
-        $task->setIsDone(false);
-        $errors = $this->validateTask($task);
-        $this->assertGreaterThan(0, count($errors), 'Expected validation errors for task without a user.');
-    }
-
-    // Vous pouvez ajouter d'autres tests si nécessaire
 }

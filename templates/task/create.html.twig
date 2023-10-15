@@ -2,7 +2,7 @@
 
 {% block body %}
     <div class="row">
-        {{ form_start(form, {'action' : path('task_create')}) }}
+        {{ form_start(form) }}
             <div class="form-group">
                 {{ form_row(form.title) }}
             </div>
@@ -11,8 +11,8 @@
             </div>
             <button type="submit" class="btn btn-success pull-right">Ajouter</button>
 
-        {{ form_end(form, {render_rest: false}) }}
+        {{ form_end(form) }}
 
-        <a href="/" class="btn btn-primary">Retour à l'index</a>
+        <a href="{{ path('homepage')}}" class="btn btn-primary">Retour à l'index</a>
     </div>
 {% endblock %}

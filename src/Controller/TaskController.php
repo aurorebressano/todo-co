@@ -52,7 +52,7 @@ class TaskController extends AbstractController
     #[Route('/tasks/{id}/edit', name: 'task_edit', methods: ['GET', 'POST'])]
     public function edit(Task $task, Request $request, EntityManagerInterface $em)
     {
-        $this->denyAccessUnlessGranted('edit', $task, $translator->trans("Access denied, you can't edit this task"));
+        $this->denyAccessUnlessGranted('edit', $task, "Access denied, you can't edit this task");
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
@@ -74,7 +74,7 @@ class TaskController extends AbstractController
     #[Route('/tasks/{id}/toggle', name: 'task_toggle', methods: ['GET', 'POST'])]
     public function toggleTask(Task $task, EntityManagerInterface $em)
     {
-        $this->denyAccessUnlessGranted('edit', $task, $translator->trans("Access denied, you can't toggle this task"));
+        $this->denyAccessUnlessGranted('edit', $task, "Access denied, you can't toggle this task");
         $task->toggle(!$task->isDone());
         $em->flush();
 
@@ -86,7 +86,7 @@ class TaskController extends AbstractController
     #[Route('/tasks/{id}/delete', name: 'task_delete', methods: ['POST'])]
     public function deleteTask(Task $task, EntityManagerInterface $em)
     {
-        $this->denyAccessUnlessGranted('delete', $task, $translator->trans("Access denied, you can't delete this task"));
+        $this->denyAccessUnlessGranted('delete', $task, "Access denied, you can't delete this task");
         $em->remove($task);
         $em->flush();
 

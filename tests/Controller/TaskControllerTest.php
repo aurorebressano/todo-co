@@ -12,6 +12,7 @@ class TaskControllerTest extends WebTestCase
     private $client;
     private $userPasswordHasherInterface;
     private $userRepository;
+    private $entityManager;
 
     protected function setUp(): void
     {
@@ -20,7 +21,9 @@ class TaskControllerTest extends WebTestCase
             'PHP_AUTH_PW' => 'your_test_password',
         ]);
         $this->userPasswordHasherInterface = static::getContainer()->get('security.user_password_hasher');
-        $this->userRepository = static::getContainer()->get('doctrine.orm.entity_manager')->getRepository(User::class);
+        $this->userRepository = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(User::class);
+        $this->taskRepository = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(Task::class);
+        $this->entityManager = self::getContainer()->get('doctrine')->getManager();
     }
 
     public function createUser()
@@ -39,25 +42,67 @@ class TaskControllerTest extends WebTestCase
     public function testCreateNewTask(): void
     {
         $this->client->loginUser($this->createUser());
-        $crawler = $this->client->request('GET', '/tasks/create');
+        $this->client->request('GET', '/tasks/create');
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
-        $form = $crawler->selectButton('Ajouter')->form([
-            'task[title]' => 'Test Task',
-            'task[content]' => 'Test content',
-        ]);
+        $this->client->submitForm('Ajouter', ['task[title]' => 'Title', 'task[content]' => 'Content']);
 
-        $this->client->submit($form);
-
-        // $this->assertResponseRedirects('/');
+        $this->assertResponseRedirects();
         $this->client->followRedirect();
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-        // Check if flash message is displayed
-        // $this->assertSelectorTextContains('.flash-success', 'La tâche a été bien été ajoutée.');
 
-        // Optionally, you can also check if the task has been added in the database
-        $task = $this->validator = self::getContainer()->get('doctrine')->getRepository(Task::class)->findOneBy(['title' => 'Test Task']);
+        $this->assertSelectorExists('.alert.alert-success', 'La tâche a été bien été ajoutée.');
+
+        $task = $this->entityManager->getRepository(Task::class)->findOneBy(['title' => 'Title']);
         $this->assertNotNull($task);
+    }
+
+    public function testEditTask(): void
+    {
+        $user = $this->createUser();
+        $this->client->loginUser($user);
+        $this->client->request('GET', '/tasks/create');
+        $this->client->submitForm('Ajouter', ['task[title]' => 'Title', 'task[content]' => 'Content']);
+        $this->client->followRedirect();
+        $task = $this->taskRepository->findOneByUser($user);
+
+        $taskId = $task->getId();
+        $this->client->request('GET', '/tasks/'.$taskId.'/edit');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $this->client->submitForm('Modifier', ['task[title]' => 'EditedTitle', 'task[content]' => 'EditedContent']);
+        $crawler = $this->client->followRedirect();
+        $currentUrl = $this->client->getRequest()->getPathInfo();
+        $task = $this->taskRepository->findOneByUser($user);
+        $taskCount = $this->taskRepository->findByTitle('Title');
+        $editedTaskCount = $this->taskRepository->findByTitle('EditedTitle');
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
+        $this->assertCount(0, $taskCount);
+        $this->assertCount(1, $editedTaskCount);
+    }
+
+    public function testTasksDelete(): void
+    {
+        $user = $this->createUser();
+        $this->client->loginUser($user);
+        $this->client->request('GET', '/tasks/create');
+        $this->client->submitForm('Ajouter', ['task[title]' => 'Title', 'task[content]' => 'Content']);
+        $crawler = $this->client->followRedirect();
+
+        $this->client->request('GET', '/tasksNotDone');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorExists('.btn-info', 'Créer une tâche');
+        $this->assertSelectorExists('.btn-danger', 'Supprimer');
+        $this->client->submitForm('Supprimer', []);
+
+        $this->client->followRedirect();
+        $this->client->getRequest()->getPathInfo();
+        $this->taskRepository->findByTitle('Title');
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
     }
 }

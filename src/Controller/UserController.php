@@ -47,8 +47,8 @@ class UserController extends AbstractController
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
 
-    #[Route("/users/{id \d+}/edit", name: 'user_edit', methods: ['GET', 'POST'])]
-    public function edit(User $user, Request $request)
+    #[Route("/users/{id}/edit", name: 'user_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
+    public function edit(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasherInterface, UserRepository $userRepository)
     {
         $this->denyAccessUnlessGranted(UserVoter::EDIT, $user);
         $form = $this->createForm(UserType::class, $user);
@@ -56,10 +56,10 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
+            $password = $userPasswordHasherInterface->hashPassword($user, $form->get('password')->getData());
             $user->setPassword($password);
 
-            $this->getDoctrine()->getManager()->flush();
+            $userRepository->save($user, true);
 
             $this->addFlash('success', "L'utilisateur a bien été modifié");
 

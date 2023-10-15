@@ -48,58 +48,62 @@ class UserControllerTest extends WebTestCase
         ]);
 
         $this->client->submit($form);
-        // $this->assertSame(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
+
         $this->assertResponseRedirects();
         $this->client->followRedirect();
 
-        // $this->assertSelectorTextContains('.flash-success', "L'utilisateur a bien été ajouté.");
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorExists('.alert.alert-success', "L'utilisateur a bien été ajouté.");
 
-        // $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'TestUser']);
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'TestUser']);
 
-        // $this->assertNotNull($user);
+        $this->assertNotNull($user);
     }
 
     public function testEditUser(): void
     {
-        $this->createUser();
+        $this->client->loginUser($this->createUser());
+        $this->client->request('GET', '/users/create');
+        $this->client->submitForm('Ajouter', ['user[username]' => 'createduser', 'user[password][first]' => 'password', 'user[password][second]' => 'password', 'user[email]' => 'createduser@email.fr']);
+        $this->client->followRedirect();
 
-        $testUser = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'TestAdminUser']);
-        $this->client->loginUser($testUser);
+        $testUser = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'createduser']);
+
         $crawler = $this->client->request('GET', '/users/'.$testUser->getId().'/edit');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
-        $form = $crawler->selectButton('Update')->form([
-            'user[password]' => 'NewPassword',
+        $form = $crawler->selectButton('Modifier')->form([
+            'user[username]' => 'createduserEdited',
+            'user[password][first]' => 'password',
+            'user[password][second]' => 'password',
+            'user[email]' => 'createduser@email.fr'
         ]);
         $this->client->submit($form);
-        $this->assertSame(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseRedirects();
         $this->client->followRedirect();
 
-        $this->assertSelectorTextContains('.flash-success', "L'utilisateur a bien été modifié");
+        $this->assertSelectorExists('.alert.alert-success', "L'utilisateur a bien été modifié");
     }
 
     public function testDeleteUser(): void
     {
-        $this->createUser();
-        $testUser = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'TestAdminUser']);
-        $this->client->loginUser($testUser);
-        $this->client->request('POST', '/users/delete/'.$testUser->getId());
 
-        $this->assertSame(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
+        $this->client->loginUser($this->createUser());
+        $this->client->request('GET', '/users/create');
+        $this->client->submitForm('Ajouter', ['user[username]' => 'createduser', 'user[password][first]' => 'password', 'user[password][second]' => 'password', 'user[email]' => 'createduser@email.fr']);
         $this->client->followRedirect();
 
-        // $this->assertSelectorTextContains('.flash-success', "L'utilisateur a bien été supprimé");
+        $testUser = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'createduser']);
 
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'TestAdminUser']);
+        $this->client->request('POST', '/users/delete/'.$testUser->getId());
+
+        $this->assertResponseRedirects();
+        $this->client->followRedirect();
+
+        $this->assertSelectorExists('.alert.alert-success', "L'utilisateur a bien été supprimé");
+
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'createduser']);
         $this->assertNull($user);
     }
-
-    // protected function tearDown(): void
-    // {
-    //     parent::tearDown();
-
-    //     $this->entityManager->close();
-    //     $this->entityManager = null;
-    // }
 }
