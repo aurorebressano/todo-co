@@ -1,4 +1,4 @@
-Prérequis:
+<h3>Prérequis:</h3>h3>
 
 PHP : ⩾ 8.1.0
 MySQL ⩾ 8.0.30
@@ -7,7 +7,7 @@ Symfony 6.3
 Symfony CLI
 
 
-Installation et configuration:
+<h3>Installation et configuration:</h3>h3>
 
 Télécharger ou cloner le repository (en ligne de commande: 'git clone https://github.com/aurorebressano/todo-co.git')
 Modifier les infos nécessaires dans fichier .env (notamment DATABASE_URL avec les infos de votre base de données)
@@ -23,7 +23,7 @@ Cliquer sur les fichiers suivants à la racine du projet:
 ->open.bat (ouvrir le site dans le navigateur)
 
 
-Tests unitaires:
+<h3>Tests unitaires:</h3>
 
 Il faudra, comme pour le fichier env.local, modifier le fichier env.test en renseignant le database_url de votre base de données.
 Symfony ajoutera au nom de votre base le suffixe _test, aussi il faudra créer la base de données correspondante (nom de votre base + '_test').
@@ -35,14 +35,14 @@ En ligne de commande, jouer:
 ->php bin/console --env=test doctrine:fixtures:load
 
 
-Tests fonctionnels manuels:
+<h3>Tests fonctionnels manuels:</h3>
 
 Identifiants de connexion à des fins de test
 username: 'Admin'
 password: 'test'
 
 
-Liste des librairies:
+<h3>Liste des librairies:</h3>
 
 Php Unit
 Php CS Fixer
