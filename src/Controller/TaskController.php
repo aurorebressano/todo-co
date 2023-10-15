@@ -2,34 +2,31 @@
 
 namespace App\Controller;
 
-use DateTime;
 use App\Entity\Task;
-use App\Entity\User;
 use App\Form\TaskType;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
 class TaskController extends AbstractController
 {
-
-    #[Route("/tasksDone", name: "homepage_done", methods: ['GET'])]
+    #[Route('/tasksDone', name: 'homepage_done', methods: ['GET'])]
     public function listDone(TaskRepository $taskRepository)
     {
         return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findByIsDoneTrue($this->getUser())]);
     }
 
-    #[Route("/tasksNotDone", name: "homepage_notdone", methods: ['GET'])]
+    #[Route('/tasksNotDone', name: 'homepage_notdone', methods: ['GET'])]
     public function listNotDone(TaskRepository $taskRepository)
     {
         return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findByIsDoneFalse($this->getUser())]);
     }
 
-    #[Route("/tasks/create", name: "task_create", methods: ['GET', 'POST'])]
+    #[Route('/tasks/create', name: 'task_create', methods: ['GET', 'POST'])]
     public function create(Request $request, EntityManagerInterface $em)
     {
         $task = new Task();
@@ -37,7 +34,7 @@ class TaskController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $task->setUser($this->getUser());
             $task->setCreatedAt(new \DateTime());
             $task->setIsDone(false);
@@ -52,10 +49,10 @@ class TaskController extends AbstractController
         return $this->render('task/create.html.twig', ['form' => $form->createView()]);
     }
 
-    #[Route("/tasks/{id}/edit", name: "task_edit", methods: ['GET', 'POST'])]
+    #[Route('/tasks/{id}/edit', name: 'task_edit', methods: ['GET', 'POST'])]
     public function edit(Task $task, Request $request, EntityManagerInterface $em)
     {
-        $this->denyAccessUnlessGranted('edit', $task,  $translator->trans("Access denied, you can't edit this task"));
+        $this->denyAccessUnlessGranted('edit', $task, "Access denied, you can't edit this task");
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
@@ -74,10 +71,10 @@ class TaskController extends AbstractController
         ]);
     }
 
-    #[Route("/tasks/{id}/toggle", name: "task_toggle", methods: ['GET', 'POST'])]
+    #[Route('/tasks/{id}/toggle', name: 'task_toggle', methods: ['GET', 'POST'])]
     public function toggleTask(Task $task, EntityManagerInterface $em)
     {
-        $this->denyAccessUnlessGranted('edit', $task,  $translator->trans("Access denied, you can't toggle this task"));
+        $this->denyAccessUnlessGranted('edit', $task, "Access denied, you can't toggle this task");
         $task->toggle(!$task->isDone());
         $em->flush();
 
@@ -86,10 +83,10 @@ class TaskController extends AbstractController
         return $this->redirectToRoute('homepage');
     }
 
-    #[Route("/tasks/{id}/delete", name: "task_delete", methods: ['POST'])]
+    #[Route('/tasks/{id}/delete', name: 'task_delete', methods: ['POST'])]
     public function deleteTask(Task $task, EntityManagerInterface $em)
     {
-        $this->denyAccessUnlessGranted('delete', $task,  $translator->trans("Access denied, you can't delete this task"));
+        $this->denyAccessUnlessGranted('delete', $task, "Access denied, you can't delete this task");
         $em->remove($task);
         $em->flush();
 

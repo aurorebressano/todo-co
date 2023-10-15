@@ -22,8 +22,8 @@ class TaskRepository extends ServiceEntityRepository
     }
 
     /**
-    * @return Task[] Returns an array of Task objects
-    */
+     * @return Task[] Returns an array of Task objects
+     */
     public function findByIsDoneTrue($user): array
     {
         return $this->createQueryBuilder('t')
@@ -36,9 +36,9 @@ class TaskRepository extends ServiceEntityRepository
         ;
     }
 
-     /**
-    * @return Task[] Returns an array of Task objects
-    */
+    /**
+     * @return Task[] Returns an array of Task objects
+     */
     public function findByIsDoneFalse($user): array
     {
         return $this->createQueryBuilder('t')
@@ -50,28 +50,37 @@ class TaskRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-//    /**
-//     * @return Task[] Returns an array of Task objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
 
-//    public function findOneBySomeField($value): ?Task
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function save(Task $task, bool $flush = false)
+    {
+        $this->getEntityManager()->persist($task);
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+    
+    //    /**
+    //     * @return Task[] Returns an array of Task objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('t')
+    //            ->andWhere('t.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('t.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Task
+    //    {
+    //        return $this->createQueryBuilder('t')
+    //            ->andWhere('t.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }
