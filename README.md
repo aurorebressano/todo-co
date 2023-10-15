@@ -1,4 +1,4 @@
-<h3>Prérequis:</h3>h3>
+<h3>Prérequis:</h3>
 
 PHP : ⩾ 8.1.0
 MySQL ⩾ 8.0.30
@@ -7,7 +7,7 @@ Symfony 6.3
 Symfony CLI
 
 
-<h3>Installation et configuration:</h3>h3>
+<h3>Installation et configuration:</h3>
 
 Télécharger ou cloner le repository (en ligne de commande: 'git clone https://github.com/aurorebressano/todo-co.git')
 Modifier les infos nécessaires dans fichier .env (notamment DATABASE_URL avec les infos de votre base de données)
