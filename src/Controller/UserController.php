@@ -48,7 +48,7 @@ class UserController extends AbstractController
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
 
-    #[Route("/users/{id}/edit", name: 'user_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
+    #[Route('/users/{id}/edit', name: 'user_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function edit(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasherInterface, UserRepository $userRepository)
     {
         $this->denyAccessUnlessGranted(UserVoter::EDIT, $user);
