@@ -51,7 +51,6 @@ class TaskControllerTest extends WebTestCase
         $this->client->followRedirect();
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-
         $this->assertSelectorExists('.alert.alert-success', 'La tâche a été bien été ajoutée.');
 
         $task = $this->entityManager->getRepository(Task::class)->findOneBy(['title' => 'Title']);
