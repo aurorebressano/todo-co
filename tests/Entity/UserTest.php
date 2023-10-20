@@ -31,9 +31,9 @@ class UserTest extends KernelTestCase
         $user->setPassword($this->userPasswordHasherInterface->hashPassword($user, 'test'));
         $user->setEmail('test@example.com');
         $errors = $this->validator->validate($user);
+        
         foreach ($errors as $error) {
             echo $error->getMessage()."\n";
-            echo 'Email: '.$user->getEmail()."\n";
         }
 
         $this->assertCount(0, $errors, 'Aucune erreur attendue pour un email valide');
@@ -49,7 +49,6 @@ class UserTest extends KernelTestCase
 
         foreach ($errors as $error) {
             echo $error->getMessage()."\n";
-            echo $user->getEmail()."\n";
         }
 
         $this->assertCount(1, $errors, 'Erreurs de validation attendues pour un email invalide.');
@@ -76,8 +75,6 @@ class UserTest extends KernelTestCase
 
         foreach ($errors as $error) {
             echo $error->getMessage()."\n";
-            echo $user->getUsername()."\n";
-            echo 'Username: '.$user->getUsername()."\n";
         }
 
         $this->assertCount(1, $errors, 'Erreur de validation attendue pour un username vide.');
