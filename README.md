@@ -25,6 +25,7 @@ Cliquer sur les fichiers suivants à la racine du projet:<br>
 
 <h3>Tests unitaires:</h3>
 
+<h4>Base de données de test</h4><br/>
 Il faudra, comme pour le fichier env.local, modifier le fichier env.test en renseignant le database_url de votre base de données.
 Symfony ajoutera au nom de votre base le suffixe _test, aussi il faudra créer la base de données correspondante (nom de votre base + '_test').
 Il faudra également modifier le fichier env.local: 'APP_ENV = test'.<br>
@@ -34,13 +35,23 @@ En ligne de commande, jouer:<br>
 ->php bin/console --env=test doctrine:schema:create<br>
 ->php bin/console --env=test doctrine:fixtures:load<br>
 
+<h4>Faire tourner les tests unitaires</h4><br/>
+Après la création de la base de données de test, on peut exécuter les tests.
+En ligne de commande, jouer:<br>
+->php bin/console vendor/bin/phpunit --coverage-html public/phpunit<br>
+Le score et les erreurs s'affichent alors;
+Dans le dossier public/phpunit, il est alors possible d'ouvrir le fichier index.html dans un navigateur, afin de retrouver le taux de couverture des tests et d'autres données utiles.
 
 <h3>Tests fonctionnels manuels:</h3>
 
 Identifiants de connexion à des fins de test<br>
+Rôle adminitrateur:
 username: 'Admin'<br>
 password: 'test'<br>
 
+Rôle utilisateur lambda:
+username: 'Lambda'<br>
+password: 'test'<br>
 
 <h3>Liste des librairies:</h3>
 
