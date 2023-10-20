@@ -77,7 +77,7 @@ class UserControllerTest extends WebTestCase
             'user[username]' => 'createduserEdited',
             'user[password][first]' => 'password',
             'user[password][second]' => 'password',
-            'user[email]' => 'createduser@email.fr'
+            'user[email]' => 'createduser@email.fr',
         ]);
         $this->client->submit($form);
         $this->assertResponseRedirects();
@@ -88,7 +88,6 @@ class UserControllerTest extends WebTestCase
 
     public function testDeleteUser(): void
     {
-
         $this->client->loginUser($this->createUser());
         $this->client->request('GET', '/users/create');
         $this->client->submitForm('Ajouter', ['user[username]' => 'createduser', 'user[password][first]' => 'password', 'user[password][second]' => 'password', 'user[email]' => 'createduser@email.fr']);

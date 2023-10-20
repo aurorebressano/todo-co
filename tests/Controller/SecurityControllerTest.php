@@ -6,7 +6,6 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SecurityControllerTest extends WebTestCase
 {
@@ -45,7 +44,6 @@ class SecurityControllerTest extends WebTestCase
 
     public function testLoginWithInvalidCredentials(): void
     {
-
         $crawler = $this->client->request('GET', '/login');
 
         // Submit the login form with invalid credentials

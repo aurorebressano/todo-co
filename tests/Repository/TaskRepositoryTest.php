@@ -60,6 +60,7 @@ class TaskRepositoryTest extends KernelTestCase
         $taskRepository->save($task, true);
         $this->assertNotNull($taskRepository->findOneByTitle('TestTitleUpdated'));
         $this->assertEquals(false, $taskRepository->findOneByTitle('TestTitleUpdated')->isDone());
+
         return $task;
     }
 

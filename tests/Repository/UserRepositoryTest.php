@@ -72,5 +72,4 @@ class UserRepositoryTest extends KernelTestCase
 
         $this->assertInstanceOf(User::class, $user);
     }
-
 }

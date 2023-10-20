@@ -58,7 +58,7 @@ class TaskRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-    
+
     //    /**
     //     * @return Task[] Returns an array of Task objects
     //     */

@@ -2,16 +2,13 @@
 
 namespace App\DataFixtures;
 
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
-use Doctrine\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use App\Entity\User;
 use App\Entity\Task;
-use App\Repository\UserRepository;
 use App\Repository\TaskRepository;
+use App\Repository\UserRepository;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use DateTimeImmutable;
 
 class AppFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -33,29 +30,28 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
     {
         // tasks
 
-        $tasksDatas = array(
+        $tasksDatas = [
             [
                 'title' => 'Faire les courses',
-                'content' => "Voir liste dans bloc notes",
+                'content' => 'Voir liste dans bloc notes',
                 'isDone' => true,
-                'user' => 'Anonyme'
+                'user' => 'Anonyme',
             ],
             [
                 'title' => 'Arroser les plantes',
-                'content' => "Sauf les plantes grasses !",
+                'content' => 'Sauf les plantes grasses !',
                 'isDone' => false,
-                'user' => 'Admin'
+                'user' => 'Admin',
             ],
             [
                 'title' => 'Contemplation méditative',
-                'content' => "Toute la journée",
+                'content' => 'Toute la journée',
                 'isDone' => false,
-                'user' => 'Lambda'
-            ]
-        );
+                'user' => 'Lambda',
+            ],
+        ];
 
-        foreach($tasksDatas as $data)
-        {
+        foreach ($tasksDatas as $data) {
             $task = new Task();
             $task->setTitle($data['title']);
             $task->setContent($data['content']);
