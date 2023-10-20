@@ -55,6 +55,6 @@ password: 'test'<br>
 
 <h3>Liste des librairies:</h3>
 
-Php Unit
-Php CS Fixer
+Php Unit<br>
+Php CS Fixer<br>
 DAMA DoctrineTestBundle
