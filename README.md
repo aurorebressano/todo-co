@@ -45,11 +45,11 @@ Dans le dossier public/phpunit, il est alors possible d'ouvrir le fichier index.
 <h3>Tests fonctionnels manuels:</h3>
 
 Identifiants de connexion à des fins de test<br>
-Rôle adminitrateur:
+Rôle adminitrateur:<br>
 username: 'Admin'<br>
 password: 'test'<br>
 
-Rôle utilisateur lambda:
+Rôle utilisateur lambda:<br>
 username: 'Lambda'<br>
 password: 'test'<br>
 
