@@ -43,8 +43,9 @@ jobs:
           curl -sS https://get.symfony.com/cli/installer | bash
           mv /home/runner/.symfony5/bin/symfony /usr/local/bin/symfony
       - name: Build
-        run: | 
-          composer install
+        run: |
+          make composer
+#          make yarn
       - name: Prepare
         run: make prepare env=test db-password=root
 #      - name: Assets
