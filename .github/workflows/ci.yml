@@ -46,7 +46,7 @@ jobs:
         run: | 
           composer install
       - name: Prepare
-        run: make prepare env=test db-password=Password123!
+        run: make prepare env=test db-password=root
 #      - name: Assets
 #        run: make yarn-dev
       - name: Quality assurance
