@@ -1,4 +1,6 @@
 {
+    "name": "aurorebressano/todo-co",
+    "description" : "Super projet",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
