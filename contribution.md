@@ -37,9 +37,10 @@ Lancer php cs fixer avant de push.<br>
 Utilisez des commentaires de code clairs, des noms de variables significatifs et suivez les meilleures pratiques de développement actuelles.<br>
 Mettre à jour la documentation si nécessaire.<br>
 Effectuez des revues de code régulières pour assurer la qualité et la cohérence du code.<br>
-Assurez-vous que les tests réussissent avant de soumettre une contribution.<br>
-Utilisez des outils d'automatisation pour le formatage et les tests : cela signifie que chaque modification doit être accompagnée de tests appropriés.<br>
 Fournissez des descriptions claires et concises dans les PR pour faciliter la revue.<br>
+Assurez-vous que les tests réussissent avant de soumettre une contribution: Des tests unitaires et fonctionnels automatiques seront exécutés lorsque vous ferez un push, et le processus sera bloqué si les tests échouent, afin de prévenir les régressions de code.<br>
+
+Évidemment, vous devrez écrire les tests unitaires et fonctionnels liés à votre code et les lancer grâce à Php Unit pour vous assurer que tout fonctionne correctement.
 
 <h2>Outils obligatoires:</h2>
 
