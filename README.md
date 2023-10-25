@@ -19,7 +19,7 @@ En ligne de commande, jouer:<br>
 ->'symfony console doctrine:fixtures:load --no-interaction'<br>
 
 Cliquer sur les fichiers suivants à la racine du projet:<br>
-->startup.bat (Mettre en route le serveur local)<br>
+->start.bat (Mettre en route le serveur local)<br>
 ->open.bat (ouvrir le site dans le navigateur)<br>
 
 
